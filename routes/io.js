@@ -11,7 +11,6 @@ io.sockets.on('connection', function(socket){
 
     socket.on('NewPlayer', function(client){
         players.push(client);
-        socket.emit("RefreshPlayerList", players);
         console.log("NUEVO JUGADOR. LISTA ACTUALIZADA");
         console.log(players);
     });
@@ -24,12 +23,11 @@ io.sockets.on('connection', function(socket){
                 players[i].y = client[2];
             }
         }
-        socket.emit("RefreshPlayerList", players);
     });
 
-
-
-
+    socket.on("Sync", function () {
+        socket.emit("RefreshPlayerList", players);
+    });
 
 });
 

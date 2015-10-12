@@ -44,6 +44,7 @@ $(document).ready(function() {
 
             //STAGE
             this.dimensions = this.getCanvas();
+            var scene = canvas.Scene.get("MyScene");
 
             //escenario
             this.background = this.createElement();
@@ -58,7 +59,9 @@ $(document).ready(function() {
             localP.x = Math.floor((Math.random() * 900));
             localP.y = this.dimensions.height - 115;
             localP.drawImage("ch1back");
-            stage.append(this.localPlayer);
+            stage.append(localP);
+
+
             console.log("MI JUGADOR");
             console.log("Id :" + localP.id);
             console.log("Mi x :" +  localP.x);
@@ -68,33 +71,48 @@ $(document).ready(function() {
             this.remotePlayers = [];
             remotePlayers = this.remotePlayers;
 
+            this.remotePlayer = this.createElement();
+            remotePJ = this.remotePlayer;
+
             //EVENTOS DEL SOCKET//
             socket.emit('NewPlayer', {id: socket.id,  x:  this.localPlayer.x, y:  this.localPlayer.y});  //NOTIFICA AL SERVER DE QUE ENTRAS EN EL JUEGO
-
+            socket.emit("Sync", "variable");
             socket.on("RefreshPlayerList", function(players){        //RECIBE LISTA DEL SERVER
-                remotePlayers =  [];
-                remotePlayers.push(players);        //La sincroniza con la local
-                console.log('JUGADORES REMOTOS');
-                console.log(remotePlayers);
+
+                remotePlayers =  players; //La sincroniza con la local
+                for(j=0; j<=remotePlayers.length - 1 ;j++) {
+                    console.log("JUGADOR REMOTO");
+                    console.log(remotePlayers[j]);
+                    if(remotePlayers[j].id == localP.id) continue;
+                    remotePJ.id = remotePlayers[j].id;
+                    remotePJ.x = remotePlayers[j].x;
+                    remotePJ.y = remotePlayers[j].y;
+                    remotePJ.drawImage("ch2back");
+                    stage.append(remotePJ);
+                }
             });
 
             //MOVIMIENTOS
             canvas.Input.keyDown(Input.Left, function() {
                 localP.x -= 3;
-                socket.emit("SomeOneMove", [localP.id, localP.x, localP.y])
+                socket.emit("SomeOneMove", [localP.id, localP.x, localP.y]);
+                socket.emit("Sync", "variable");
 
             });
             canvas.Input.keyDown(Input.Right, function() {
-                localPlayer.x += 3;
-                CE.io.emit('Moving', {id: localPlayer.id, x: localPlayer.x, y :localPlayer.y});
+                localP.x += 3;
+                socket.emit("SomeOneMove", [localP.id, localP.x, localP.y]);
+                socket.emit("Sync", "variable");
             });
             canvas.Input.keyDown(Input.Up, function() {
-                localPlayer.y -= 2;
-                CE.io.emit('Moving', {id: localPlayer.id, x: localPlayer.x, y :localPlayer.y});
+                localP.y += 3;
+                socket.emit("SomeOneMove", [localP.id, localP.x, localP.y]);
+                socket.emit("Sync", "variable");
             });
             canvas.Input.keyDown(Input.Bottom, function() {
-                localPlayer.y += 2;
-                CE.io.emit('Moving', {id: localPlayer.id, x: localPlayer.x, y :localPlayer.y});
+                localP.y -= 3;
+                socket.emit("SomeOneMove", [localP.id, localP.x, localP.y]);
+                socket.emit("Sync", "variable");
             });
 
             /*this.player.drawImage("ch1back");
@@ -178,8 +196,9 @@ $(document).ready(function() {
 
         },
 
-        render: function(stage) {
-
+        render: function(stage){
+            socket.emit("Sync", "variable");
+            stage.refresh();
             /* for(i=0; i<=players.length -1 ;i++){
 
              var oneRemotePlayer =  players[i][0];
@@ -210,7 +229,7 @@ $(document).ready(function() {
             if(this.player.x == 180){
              this.player.drawImage('ch1right');
              }*/
-            stage.refresh();
+
 
         },
 
