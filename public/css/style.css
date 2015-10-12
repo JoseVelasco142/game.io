@@ -1,0 +1,13 @@
+body{
+    background: url("../images/background.gif");
+    background-size: 100%;
+}
+
+
+canvas{
+    border:1px solid black;
+    margin-left: 7.5%;
+    margin-top: 3%;
+    border-radius: 20px;
+}
+

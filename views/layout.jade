@@ -1,0 +1,22 @@
+doctype html
+html
+    head
+        title Game.io
+        script(type='text/javascript', src='/js/jquery-2.1.4.min.js')
+        script(type='text/javascript', src='/js/bootstrap.min.js')
+        //LIBRERIAS CANVASENGINE
+        script(type='text/javascript', src='/canvasEngine/canvasengine-1.3.2.all.min.js')
+        script(type='text/javascript', src='/canvasEngine/canvasengine.js')
+        script(type='text/javascript', src='/canvasEngine/extends/Animation.js')
+        script(type='text/javascript', src='/canvasEngine/extends/Effect.js')
+        script(type='text/javascript', src='/canvasEngine/extends/Input.js')
+        script(type='text/javascript', src='/canvasEngine/extends/Hit.js')
+        script(type='text/javascript', src='/js/socket.io.js')
+        //LIBRERIAS DEL JUEGO
+        script(type='text/javascript', src='/js/clientCore.js')
+        //CSS
+        link(rel='stylesheet', type='text/css', href='/css/bootstrap-theme.min.css')
+        link(rel='stylesheet', type='text/css', href='/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/style.css')
+    body
+        block content
